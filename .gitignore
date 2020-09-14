@@ -1,0 +1,6 @@
+datasets/partnet/*
+datasets/scannet/*
+datasets/scan2cad/*
+datasets/shapenet/*
+
+tmp/*
