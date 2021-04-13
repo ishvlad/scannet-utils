@@ -1,0 +1,22 @@
+import os
+
+###
+# meta variables
+###
+
+PROJECT_DIR = None
+
+###
+# DATASETS LOCATION
+###
+
+DATASETS_ROOT = None
+
+SCANNET_DIR = None
+SCANNET_VOXELIZED_DIR = None
+
+###
+# EXTERNAL SCRIPTS LOCATION
+###
+
+SDF_VOXELIZER_PATH = None
