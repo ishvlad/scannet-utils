@@ -6,8 +6,8 @@ def from_tqs_to_matrix(translation, quater, scale):
     """
     (T(3), Q(4), S(3)) -> 4x4 Matrix
 
-    :param tr: 3 dim translation vector (np.array or list)
-    :param quat: 4 dim rotation quaternion (np.array or list)
+    :param translation: 3 dim translation vector (np.array or list)
+    :param quater: 4 dim rotation quaternion (np.array or list)
     :param scale: 3 dim scale vector (np.array or list)
     :return: 4x4 transformation matrix
     """
@@ -28,7 +28,7 @@ def apply_transform(points, *args):
     points = points х args[0] x args[1] x args[2] x ... args[-1]
 
     :param points: np.array N x (3|4)
-    :param args: array of tranformations. May be 4x4 np.arrays, or dict {
+    :param args: array of transformations. May be 4x4 np.arrays, or dict {
         'transformation': [t1, t2, t3],
         'rotation': [q1, q2, q3, q4],
         'scale': [s1, s2, s3],
@@ -51,6 +51,49 @@ def apply_transform(points, *args):
             ))
         else:
             transformations.append(transform)
+
+    # main loop
+    for transform in transformations:
+        points = points @ transform.T
+
+    # back to origin dimensionality if needed
+    if initial_dim == 3:
+        points = points[:, :3]
+
+    return points
+
+
+def apply_inverse_transform(points, *args):
+    """
+    points = points х args[0] x args[1] x args[2] x ... args[-1]
+
+    :param points: np.array N x (3|4)
+    :param args: array of tranformations. May be 4x4 np.arrays, or dict {
+        'transformation': [t1, t2, t3],
+        'rotation': [q1, q2, q3, q4],
+        'scale': [s1, s2, s3],
+    }
+    :return: transformed points
+    """
+    # save origin dimensionality and add forth coordinate if needed
+    initial_dim = points.shape[-1]
+    if initial_dim == 3:
+        points = add_forth_coord(points)
+
+    # transform each transformation to 4x4 matrix
+    transformations = []
+    for transform in args:
+        if type(transform) == dict:
+            t = from_tqs_to_matrix(
+                translation=transform['translation'],
+                quater=transform['rotation'],
+                scale=transform['scale']
+            )
+            t = np.linalg.inv(t)
+            transformations.append(t)
+        else:
+            t = np.linalg.inv(transform)
+            transformations.append(t)
 
     # main loop
     for transform in transformations:

@@ -1,7 +1,5 @@
 import numpy as np
 
-from src.transformations import apply_transform, add_forth_coord
-
 
 def vox2obj(vox, res=0.1, apply_grid2world=True, return_coord_dim=3, return_index=False):
     """
@@ -20,13 +18,12 @@ def vox2obj(vox, res=0.1, apply_grid2world=True, return_coord_dim=3, return_inde
     vertices = indices[:, ::-1]
 
     if apply_grid2world:
-        vertices = apply_transform(vertices, vox.grid2world)
+        vertices = vertices @ vox.grid2world[:3, :3] + vox.grid2world[:3, -1]
 
     if return_coord_dim:
-        vertices = add_forth_coord(vertices)
+        vertices = np.hstack((vertices, np.ones((len(vertices), 1))))
 
     if return_index:
         return vertices, indices
     else:
         return vertices
-
