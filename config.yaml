@@ -1,0 +1,14 @@
+
+# -----
+# Data
+# -----
+
+# scannet
+scannet_root: '/mnt/bulk/3dgnn/scannet'
+
+# -------
+# Scripts
+# -------
+
+# sens -> vox
+sdf_voxelizer_path: 'external/SDFVoxelization/build/main'

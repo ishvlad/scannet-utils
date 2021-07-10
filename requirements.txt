@@ -3,3 +3,7 @@ pandas
 tqdm
 trimesh
 scipy
+quaternion
+imageio
+opencv-python
+meshplot
